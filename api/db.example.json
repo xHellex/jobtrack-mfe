@@ -1,0 +1,47 @@
+{
+    "$schema":  "./node_modules/json-server/schema.json",
+    "postulaciones":  [
+                          {
+                              "id":  "1",
+                              "empresa":  "Empresa Demo Uno",
+                              "cargo":  "Desarrollador Front-End",
+                              "estado":  "postulado",
+                              "fecha":  "2026-09-01"
+                          },
+                          {
+                              "id":  "2",
+                              "empresa":  "Tecnologias Ficticias SpA",
+                              "cargo":  "Front-End Developer Senior",
+                              "estado":  "postulado",
+                              "fecha":  "2026-09-06"
+                          },
+                          {
+                              "id":  "3",
+                              "empresa":  "Consultora Ejemplo Ltda.",
+                              "cargo":  "Ingeniero de Software Angular",
+                              "estado":  "rechazado",
+                              "fecha":  "2026-09-11"
+                          },
+                          {
+                              "id":  "4",
+                              "empresa":  "Startup de Prueba",
+                              "cargo":  "Desarrollador React",
+                              "estado":  "postulado",
+                              "fecha":  "2026-09-16"
+                          },
+                          {
+                              "id":  "5",
+                              "empresa":  "Banco Imaginario",
+                              "cargo":  "Desarrollador Full-Stack Junior",
+                              "estado":  "postulado",
+                              "fecha":  "2026-09-21"
+                          },
+                          {
+                              "id":  "6",
+                              "empresa":  "Agencia Demo Digital",
+                              "cargo":  "Especialista UI y Accesibilidad",
+                              "estado":  "rechazado",
+                              "fecha":  "2026-09-26"
+                          }
+                      ]
+}

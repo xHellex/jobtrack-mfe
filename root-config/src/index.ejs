@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>JobTrack MFE</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+  <!--
+    script-src sin 'unsafe-inline': solo los scripts en línea por hash (tema-inicial, el que importa
+    root-config y el <script type="importmap"> que inserta import-map-injector). Si cambia uno, cambia
+    su hash: csp.test.ts lo detecta. Los overrides de import-map-overrides quedan bloqueados porque
+    cambian el hash del import map; para usarlos hay que ajustar la CSP.
+  -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self' https: localhost:*; script-src 'sha256-U/ALhm86RHTsBUsBRWvQR8D0qvNtLGqQF85s42q2ep0=' 'sha256-DhdlPckHj3PnTNjrLvYlNRvywFRskafOG9vR3xL5t+g=' 'sha256-Odpf//13/Pk/RJzCrw1ic1nIB5h5RW31hzvNkfFIW1I=' https: localhost:*;connect-src https: localhost:* ws://localhost:*; style-src 'unsafe-inline' https:; object-src 'none';">
+
+  <script id="tema-inicial">
+    // Corre antes del primer pintado: sin destello del tema equivocado
+    (function () {
+      var t = null;
+      try { t = localStorage.getItem('tema'); } catch (e) { /* almacenamiento bloqueado */ }
+      if (t !== 'light' && t !== 'dark') {
+        try { t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) { t = 'light'; }
+      }
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+
+  <style>
+    /* root-config/src/theme.css (Inlined for root rendering consistency) */
+    :root,
+    [data-theme="light"] {
+      color-scheme: light;
+      --bg: #f5f7f9;
+      --surface: #ffffff;
+      --surface-2: #eef1f4;
+      --border: #dbe1e7;
+      --text: #141920;
+      --text-muted: #5a6472;
+      --accent: #00838a;
+      --accent-hover: #006a70;
+      --on-accent: #ffffff;
+      --nav-bg: #111418;
+      --nav-text: #f2f4f6;
+
+      --st-postulado: #1d4ed8;
+      --st-revision: #155e75;
+      --st-entrevista: #6d28d9;
+      --st-prueba: #92400e;
+      --st-oferta: #166534;
+      --st-rechazado: #b91c1c;
+      --st-descartado: #4b5563;
+
+      --radius: 10px;
+      --shadow: 0 1px 3px rgb(0 0 0 / .08), 0 4px 12px rgb(0 0 0 / .05);
+    }
+
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0d1015;
+      --surface: #151a21;
+      --surface-2: #1d242d;
+      --border: #2b333e;
+      --text: #e6e9ee;
+      --text-muted: #98a2b0;
+      --accent: #00adb5;
+      --accent-hover: #2cc5cc;
+      --on-accent: #0d1015;
+      --nav-bg: #080a0d;
+      --nav-text: #e6e9ee;
+
+      --st-postulado: #60a5fa;
+      --st-revision: #22d3ee;
+      --st-entrevista: #a78bfa;
+      --st-prueba: #fbbf24;
+      --st-oferta: #4ade80;
+      --st-rechazado: #f87171;
+      --st-descartado: #9ca3af;
+
+      --shadow: 0 1px 3px rgb(0 0 0 / .4);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+    }
+
+    /* Minimal Preflight Tailwind overrides */
+    * {
+      box-sizing: border-box;
+      border: 0 solid;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: inherit;
+      font-weight: inherit;
+    }
+
+    /* Título de página: lo pone el layout de root-config, uno por ruta. Va después del reset de h1 */
+    .page-title {
+      max-width: 80rem;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 0;
+      font-size: 1.75rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    /* Badge Mixin interactivo unificado */
+    .badge {
+      color: var(--st);
+      background: color-mix(in srgb, var(--st) 14%, transparent);
+      border: 1px solid color-mix(in srgb, var(--st) 35%, transparent);
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: .8rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge[data-estado="postulado"] {
+      --st: var(--st-postulado);
+    }
+
+    .badge[data-estado="en revisión"] {
+      --st: var(--st-revision);
+    }
+
+    .badge[data-estado="entrevista"] {
+      --st: var(--st-entrevista);
+    }
+
+    .badge[data-estado="prueba técnica"] {
+      --st: var(--st-prueba);
+    }
+
+    .badge[data-estado="oferta"] {
+      --st: var(--st-oferta);
+    }
+
+    .badge[data-estado="rechazado"] {
+      --st: var(--st-rechazado);
+    }
+
+    .badge[data-estado="descartado"] {
+      --st: var(--st-descartado);
+    }
+  </style>
+  <meta name="importmap-type" use-injector />
+
+  <script src="https://cdn.jsdelivr.net/npm/regenerator-runtime@0.14.1/runtime.min.js"></script>
+  <!-- Polyfill estricto requerido para que Angular funcione en single-spa -->
+  <script src="https://cdn.jsdelivr.net/npm/zone.js@0.14.4/bundles/zone.umd.min.js"></script>
+
+  <!-- Dependencias globales compartidas para TODAS las apps -->
+  <script type="injector-importmap">
+    {
+      "imports": {
+        "single-spa": "https://cdn.jsdelivr.net/npm/single-spa@6.0.3/lib/es2015/esm/single-spa.min.js",
+        "react": "https://esm.sh/react@18.3.1",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+        "@Felo/root-config": "//localhost:9000/Felo-root-config.js",
+        "@Felo/shared": "//localhost:8400/Felo-shared.js",
+        "@Felo/postulaciones": "//localhost:8500/Felo-postulaciones.js",
+        "@Felo/stats": "//localhost:8501/Felo-stats.js",
+        "@Felo/navbar": "//localhost:4200/main.js"
+      }
+    }
+  </script>
+
+  <!-- Rutas específicas cuando estamos desarrollando localmente -->
+  <% if (isLocal) { %>
+    <script type="injector-importmap">
+    {
+      "imports": {
+        "@Felo/root-config": "//localhost:9000/Felo-root-config.js",
+        "@Felo/shared": "//localhost:8400/Felo-shared.js",
+        "@Felo/postulaciones": "//localhost:8500/Felo-postulaciones.js",
+        "@Felo/stats": "//localhost:8501/Felo-stats.js",
+        "@Felo/navbar": "//localhost:4200/main.js"
+      }
+    }
+    </script>
+    <% } %>
+
+      <!-- Herramientas obligatorias de single-spa -->
+      <script src="https://cdn.jsdelivr.net/npm/import-map-overrides@5.1.1/dist/import-map-overrides.js"></script>
+      <script
+        src="https://cdn.jsdelivr.net/npm/@single-spa/import-map-injector@2.0.1/lib/import-map-injector.js"></script>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <main></main>
+  <script>
+    window.importMapInjector.initPromise.then(() => {
+      import('@Felo/root-config');
+    });
+  </script>
+  <import-map-overrides-full show-when-local-storage="devtools" dev-libs></import-map-overrides-full>
+</body>
+
+</html>

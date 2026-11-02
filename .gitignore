@@ -1,0 +1,23 @@
+node_modules/
+.angular/
+dist/
+.DS_Store
+
+# Variables de entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Entregables y comprimidos
+*.zip
+
+# Contexto local de agentes (no versionar)
+CLAUDE.local.md
+
+# Reportes de tests
+coverage/
+# Datos personales reales de la API (nunca versionar)
+api/db.json
+
+# Permisos locales de Claude Code (no versionar)
+.claude/settings.local.json

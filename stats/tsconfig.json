@@ -1,0 +1,20 @@
+{
+  "extends": "ts-config-single-spa",
+  "compilerOptions": {
+    "jsx": "react",
+    "esModuleInterop": true,
+    "types": [
+      "jest"
+    ],
+    "declarationDir": "dist"
+  },
+  "files": [
+    "src/Felo-stats.tsx"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/**/*.test*"
+  ]
+}

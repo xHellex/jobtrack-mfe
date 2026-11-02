@@ -1,0 +1,15 @@
+<single-spa-router>
+  <nav>
+    <application name="@Felo/navbar"></application>
+  </nav>
+  <main>
+    <route path="postulaciones">
+      <h1 class="page-title">Postulaciones</h1>
+      <application name="@Felo/stats"></application>
+      <application name="@Felo/postulaciones"></application>
+    </route>
+    <route default>
+      <h1 class="page-title">Bienvenido a JobTrack</h1>
+    </route>
+  </main>
+</single-spa-router>

@@ -1,0 +1,16 @@
+{
+  "extends": "ts-config-single-spa",
+  "compilerOptions": {
+    "jsx": "react",
+    "declarationDir": "dist"
+  },
+  "files": [
+    "src/Felo-postulaciones.tsx"
+  ],
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "src/**/*.test*"
+  ]
+}
